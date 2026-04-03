@@ -102,3 +102,10 @@ seven-art-list/
    ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+### Database Setup
+
+1. **Create Project**: Create a new project on [Supabase](https://supabase.com/).
+2. **SQL Schema**: Copy the content of [docs/database_schema.sql](./docs/database_schema.sql) and execute it in the **SQL Editor** of your Supabase project.
+3. **Environment Variables**: Create a `.env.local` file from [.env.example](./.env.example) and fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+
