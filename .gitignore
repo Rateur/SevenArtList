@@ -1,0 +1,8 @@
+# SECRETS
+.env
+
+# ORCHESTRATION
+tasks/
+ 
+
+
