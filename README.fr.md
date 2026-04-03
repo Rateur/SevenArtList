@@ -30,7 +30,10 @@ Le nom provient du "7ème Art" (le Cinéma) combiné au concept de "Watchlist". 
 
 | Fonctionnalité | Description | Statut |
 | :--- | :--- | :--- |
-| | | |
+| **Infrastructure Data** | Setup Supabase & Schéma PostgreSQL | `[En Cours]` |
+| **Système d'Auth** | Connexion, Sessions & Middleware | `[Prévu]` |
+| **Recherche Médias** | Intégration TMDB & Recherche Temps Réel | `[Prévu]` |
+| **Watchlist** | Suivi Personnel & Partagé | `[Prévu]` |
 
 ## Stack Technique
 
