@@ -10,6 +10,7 @@ Centralize your watchlist. Sync with your partner. Gamify your cinema experience
 [![Supabase](https://img.shields.io/badge/Supabase-1C1C1C?style=flat-square&logo=supabase&logoColor=3ECF8E)](https://supabase.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![GitHub Stars](https://img.shields.io/github/stars/Rateur/SevenArtList?style=flat-square)](https://github.com/Rateur/SevenArtList/stargazers)
+[![CI](https://github.com/Rateur/SevenArtList/actions/workflows/ci.yml/badge.svg)](https://github.com/Rateur/SevenArtList/actions/workflows/ci.yml)
 
 [Report a bug](https://github.com/Rateur/SevenArtList/issues/new?labels=bug&template=bug_report.md) • [Request a feature](https://github.com/Rateur/SevenArtList/issues/new?labels=enhancement&template=feature_request.md)
 
