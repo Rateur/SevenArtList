@@ -5,16 +5,16 @@
 - [ ] Vérifier la création d'une branche isolée pour chaque nouvelle phase.
 
 ## PHASE 1 : INITIALISATION FRONTEND (CLEAN ARCHITECTURE)
-- [ ] Initialiser le projet Next.js (App Router, TypeScript, Tailwind).
-- [ ] Configurer ESLint et Prettier pour un standard de code strict.
-- [ ] Installer et initialiser Shadcn UI (`components.json`).
-- [ ] Nettoyer le boilerplate et structurer les dossiers : `components/`, `lib/`, `hooks/`, `types/`.
+- [x] Initialiser le projet Next.js (App Router, TypeScript, Tailwind).
+- [x] Configurer ESLint et Prettier pour un standard de code strict.
+- [x] Installer et initialiser Shadcn UI (`components.json`).
+- [x] Nettoyer le boilerplate et structurer les dossiers : `components/`, `lib/`, `hooks/`, `types/`.
 
 ## PHASE 2 : STANDARDS OPEN SOURCE (DOCUMENTATION)
-- [ ] Rédiger le `README.md` (Anglais) et `README.fr.md` (Français) : inclure l'explication du nom "SevenArtList", les badges tech, et la vision Solo/Couple.
-- [ ] Créer le fichier `CONTRIBUTING.md` détaillant le processus de fork, création de branche et PR pour les contributeurs.
-- [ ] Ajouter la licence Open Source (MIT) dans le fichier `LICENSE`.
-- [ ] Créer la structure initiale de `docs/` pour la documentation technique.
+- [x] Rédiger le `README.md` (Anglais) et `README.fr.md` (Français) : inclure l'explication du nom "SevenArtList", les badges tech, et la vision Solo/Couple.
+- [x] Créer le fichier `CONTRIBUTING.md` détaillant le processus de fork, création de branche et PR pour les contributeurs.
+- [x] Ajouter la licence Open Source (MIT) dans le fichier `LICENSE`.
+- [x] Créer la structure initiale de `docs/` pour la documentation technique.
 
 ## PHASE 3 : INTÉGRATION CONTINUE (CI/CD)
 - [ ] Créer le workflow `.github/workflows/ci.yml`.
