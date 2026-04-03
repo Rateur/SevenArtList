@@ -67,8 +67,9 @@ export default function LoginPage() {
       await authService.signInWithEmail(supabase, values.email, values.password)
       router.push("/")
       router.refresh()
-    } catch (err: any) {
-      setError(err.message || "Erreur lors de la connexion")
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Erreur lors de la connexion"
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -80,8 +81,9 @@ export default function LoginPage() {
     try {
       await authService.signUpWithEmail(supabase, values.email, values.password)
       setIsEmailSent(true)
-    } catch (err: any) {
-      setError(err.message || "Erreur lors de l'inscription")
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Erreur lors de l'inscription"
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
