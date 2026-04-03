@@ -37,3 +37,7 @@ node_modules
 
 # agent
 tasks/
+
+# Local AI files
+AGENTS.md
+CLAUDE.md
