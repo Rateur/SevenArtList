@@ -13,6 +13,8 @@ Centralize your watchlist. Sync with your partner. Gamify your cinema experience
 
 [Report a bug](https://github.com/Rateur/SevenArtList/issues/new?labels=bug&template=bug_report.md) • [Request a feature](https://github.com/Rateur/SevenArtList/issues/new?labels=enhancement&template=feature_request.md)
 
+🇬🇧 English • [🇫🇷 Français](./README.fr.md)
+
 </div>
 
 ---
@@ -53,6 +55,24 @@ The name comes from the "7th Art" (Cinema) combined with the concept of a "Watch
     </td>
   </tr>
 </table>
+
+## Project Structure
+
+```text
+seven-art-list/
+├── src/
+│   ├── app/              # Next.js App Router (Pages & API routes)
+│   ├── components/       # React components
+│   │   └── ui/           # Shadcn UI components
+│   ├── hooks/            # Custom React hooks
+│   ├── lib/              # Utility functions & Supabase client
+│   └── types/            # TypeScript definitions
+├── public/               # Static assets
+├── docs/                 # Technical documentation
+├── tailwind.config.ts    # Tailwind CSS configuration
+├── components.json       # Shadcn UI configuration
+└── package.json          # Dependencies & Scripts
+```
 
 ## Getting Started
 
