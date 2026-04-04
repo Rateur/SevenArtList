@@ -25,7 +25,7 @@ export function MovieCard({ movie }: MovieCardProps) {
           />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center bg-zinc-100 p-4 text-center dark:bg-zinc-900">
-            <span className="text-sm font-medium text-zinc-500">Pas d'affiche</span>
+            <span className="text-sm font-medium text-zinc-500">Pas d&apos;affiche</span>
             <span className="mt-2 text-xs text-zinc-400">{movie.title}</span>
           </div>
         )}

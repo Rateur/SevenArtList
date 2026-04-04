@@ -76,7 +76,7 @@ export function SearchMovies() {
               Aucun résultat trouvé
             </h3>
             <p className="mt-2 text-zinc-500 max-w-xs mx-auto">
-              Nous n'avons trouvé aucun film correspondant à "{query}".
+              Nous n&apos;avons trouvé aucun film correspondant à &quot;{query}&quot;.
               Essayez avec un autre titre.
             </p>
           </div>
