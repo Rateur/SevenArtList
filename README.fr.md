@@ -61,7 +61,7 @@ Le nom provient du "7ème Art" (le Cinéma) combiné au concept de "Watchlist". 
     </td>
     <td align="center" width="96">
       <a href="https://www.themoviedb.org/">
-        <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_2-d537fb228cf3ded904ef09b136fe3fec72548ebc1fea3fbbd1ad90647194b7c8.svg" width="48" height="48" alt="TMDB" />
+        <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_2-d537fb228cf3ded904ef09b136fe3fec72548ebc1fea3fbbd1ad9e36364db38b.svg" width="48" height="48" alt="TMDB" />
       </a>
       <br />TMDB
     </td>
