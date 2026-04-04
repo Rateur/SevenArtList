@@ -68,7 +68,7 @@ export function MovieDetailsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl overflow-hidden p-0 bg-zinc-950 border-zinc-800 text-zinc-100">
+      <DialogContent className="max-w-[95vw] md:max-w-[800px] overflow-hidden p-0 bg-zinc-950 border-zinc-800 text-zinc-100 shadow-2xl">
         <div className="relative">
           {/* Backdrop Section */}
           <div className="relative h-[250px] sm:h-[400px] w-full overflow-hidden">
@@ -92,7 +92,7 @@ export function MovieDetailsDialog({
           </div>
 
           {/* Content Over Backdrop */}
-          <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+          <div className="absolute bottom-0 left-0 right-0 p-6 sm:px-10 sm:py-8">
             <div className="flex flex-col sm:flex-row gap-6 items-end sm:items-start">
               {/* Poster */}
               <div className="relative hidden sm:block w-40 aspect-[2/3] rounded-lg overflow-hidden shadow-2xl border border-zinc-800 flex-shrink-0">
@@ -109,7 +109,7 @@ export function MovieDetailsDialog({
               </div>
 
               {/* Main Info */}
-              <div className="flex-1 space-y-2">
+              <div className="flex-1 space-y-2 min-w-0">
                 {loading ? (
                   <div className="space-y-4">
                     <Skeleton className="h-10 w-3/4 bg-zinc-800" />
@@ -121,7 +121,7 @@ export function MovieDetailsDialog({
                   </div>
                 ) : (
                   <>
-                    <h2 className="font-cinzel text-3xl sm:text-4xl font-bold tracking-tight text-white line-clamp-2">
+                    <h2 className="font-cinzel text-3xl sm:text-4xl font-bold tracking-tight text-white break-words">
                       {movie?.title}
                     </h2>
                     <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-400 font-medium">
@@ -157,7 +157,7 @@ export function MovieDetailsDialog({
         </div>
 
         {/* Details Section */}
-        <div className="p-6 sm:p-8 space-y-8 overflow-y-auto max-h-[50vh]">
+        <div className="px-6 sm:px-10 py-8 space-y-8 overflow-y-auto max-h-[50vh]">
           {/* Synopsis */}
           <div className="space-y-3">
             <h3 className="text-lg font-semibold text-zinc-200 border-l-4 border-zinc-700 pl-3">
