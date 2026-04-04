@@ -15,7 +15,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { 
   MovieDetails, 
   getPosterUrl, 
-  getBackdropUrl 
+  getBackdropUrl,
+  getProviderLogoUrl
 } from "@/lib/services/tmdb";
 import { getMovieDetailsAction } from "@/app/actions/movie";
 
@@ -183,6 +184,88 @@ export function MovieDetailsDialog({
               <p className="text-zinc-400 leading-relaxed text-sm sm:text-base">
                 {movie?.overview || "Aucun synopsis disponible."}
               </p>
+            )}
+          </div>
+
+          {/* Watch Providers */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-zinc-200 border-l-4 border-zinc-700 pl-3">
+              Où regarder ?
+            </h3>
+            {loading ? (
+              <div className="flex gap-3">
+                <Skeleton className="h-10 w-10 rounded-lg bg-zinc-900" />
+                <Skeleton className="h-10 w-10 rounded-lg bg-zinc-900" />
+                <Skeleton className="h-10 w-10 rounded-lg bg-zinc-900" />
+              </div>
+            ) : movie?.watchProviders ? (
+              <div className="space-y-4">
+                {/* Streaming (Flatrate) */}
+                {movie.watchProviders.flatrate && movie.watchProviders.flatrate.length > 0 ? (
+                  <div className="flex flex-wrap gap-3">
+                    {movie.watchProviders.flatrate.map((provider) => (
+                      <a
+                        key={provider.provider_id}
+                        href={movie.watchProviders?.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block transition-all hover:scale-110 active:scale-95 group"
+                        title={provider.provider_name}
+                      >
+                        <div className="relative w-10 h-10 rounded-lg overflow-hidden shadow-lg border border-zinc-800 group-hover:border-zinc-600 transition-colors">
+                          <Image
+                            src={getProviderLogoUrl(provider.logo_path)}
+                            alt={provider.provider_name}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                ) : !movie.watchProviders.rent && !movie.watchProviders.buy ? (
+                  <p className="text-zinc-500 text-sm italic">Non disponible en streaming actuellement.</p>
+                ) : null}
+
+                {/* VOD (Rent/Buy) */}
+                {(movie.watchProviders.rent || movie.watchProviders.buy) && (
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest bg-zinc-900/50 px-2 py-1 rounded border border-zinc-800">
+                      VOD
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {Array.from(
+                        new Map(
+                          [...(movie.watchProviders.rent || []), ...(movie.watchProviders.buy || [])].map((p) => [
+                            p.provider_id,
+                            p,
+                          ])
+                        ).values()
+                      ).map((provider) => (
+                        <a
+                          key={provider.provider_id}
+                          href={movie.watchProviders?.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block opacity-60 hover:opacity-100 transition-opacity"
+                          title={provider.provider_name}
+                        >
+                          <div className="relative w-7 h-7 rounded-md overflow-hidden border border-zinc-800 shadow-sm">
+                            <Image
+                              src={getProviderLogoUrl(provider.logo_path)}
+                              alt={provider.provider_name}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="text-zinc-500 text-sm italic">Non disponible en streaming actuellement.</p>
             )}
           </div>
 
