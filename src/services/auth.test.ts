@@ -20,7 +20,8 @@ describe('authService', () => {
   });
 
   it('should return null when no session exists', async () => {
-    const session = await authService.getSession();
+    const supabase = {} as any; // Mock Supabase client
+    const session = await authService.getSession(supabase);
     expect(session).toBeNull();
   });
 });
