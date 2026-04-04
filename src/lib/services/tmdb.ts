@@ -19,6 +19,30 @@ export interface TMDBSearchResponse {
   total_results: number;
 }
 
+export interface CastMember {
+  id: number;
+  name: string;
+  character: string;
+  profile_path: string | null;
+  order: number;
+}
+
+export interface MovieCredits {
+  cast: CastMember[];
+}
+
+export interface Genre {
+  id: number;
+  name: string;
+}
+
+export interface MovieDetails extends TMDBMovie {
+  runtime: number | null;
+  genres: Genre[];
+  tagline: string | null;
+  credits?: MovieCredits;
+}
+
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
 // Standard Filtering Constants
@@ -92,9 +116,26 @@ export async function searchMovies(query: string, page = 1): Promise<TMDBSearchR
 }
 
 /**
+ * Fetches detailed information for a specific movie.
+ */
+export async function getMovieDetails(id: number): Promise<MovieDetails> {
+  return await fetchTMDB<MovieDetails>(
+    `/movie/${id}?language=fr-FR&append_to_response=credits`
+  );
+}
+
+/**
  * Gets the full poster URL for a given path.
  */
 export function getPosterUrl(path: string | null, size: "w342" | "w500" | "w780" | "original" = "w500"): string {
-  if (!path) return "/placeholder-movie.png"; // We'll need a placeholder later
+  if (!path) return "/placeholder-movie.png";
+  return `https://image.tmdb.org/t/p/${size}${path}`;
+}
+
+/**
+ * Gets the full backdrop URL for a given path.
+ */
+export function getBackdropUrl(path: string | null, size: "w780" | "w1280" | "original" = "w1280"): string {
+  if (!path) return ""; 
   return `https://image.tmdb.org/t/p/${size}${path}`;
 }
