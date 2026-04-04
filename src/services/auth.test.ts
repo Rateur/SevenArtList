@@ -20,6 +20,7 @@ describe('authService', () => {
   });
 
   it('should return null when no session exists', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const supabase = {} as any; // Mock Supabase client
     const session = await authService.getSession(supabase);
     expect(session).toBeNull();

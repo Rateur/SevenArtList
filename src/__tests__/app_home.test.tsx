@@ -12,5 +12,5 @@ test('Home page renders correctly', () => {
   render(<Home />)
   const heading = screen.getByRole('heading', { level: 1 })
   expect(heading).toBeDefined()
-  expect(heading.textContent).toContain('To get started, edit the page.tsx file.')
+  expect(heading.textContent).toContain('Votre bibliothèque personnelle')
 })

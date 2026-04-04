@@ -61,9 +61,27 @@ export async function searchMovies(query: string, page = 1): Promise<TMDBSearchR
   }
 
   const encodedQuery = encodeURIComponent(query);
-  return fetchTMDB<TMDBSearchResponse>(
+  const response = await fetchTMDB<TMDBSearchResponse>(
     `/search/movie?query=${encodedQuery}&language=fr-FR&page=${page}&include_adult=false`
   );
+
+  // Filter out documentaries (genre 99) and "Behind the scenes" or "Making of" content
+  const filteredResults = response.results.filter((movie) => {
+    const isDocumentary = movie.genre_ids.includes(99);
+    const lowercaseTitle = movie.title.toLowerCase();
+    const isBehindTheScenes =
+      lowercaseTitle.includes("behind the scenes") ||
+      lowercaseTitle.includes("making of") ||
+      lowercaseTitle.includes("short film") ||
+      movie.overview.toLowerCase().includes("behind the scenes");
+
+    return !isDocumentary && !isBehindTheScenes;
+  });
+
+  return {
+    ...response,
+    results: filteredResults,
+  };
 }
 
 /**

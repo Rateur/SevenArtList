@@ -11,11 +11,19 @@ export default function Home() {
             </span>
           </div>
           <nav className="flex items-center gap-4">
-            <button className="text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100">
+            <button
+              className="text-sm font-medium text-zinc-400 cursor-not-allowed opacity-50"
+              title="À venir"
+              disabled
+            >
               Ma Liste
             </button>
             <div className="h-4 w-[1px] bg-zinc-200 dark:bg-zinc-800" />
-            <button className="text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100">
+            <button
+              className="text-sm font-medium text-zinc-400 cursor-not-allowed opacity-50"
+              title="À venir"
+              disabled
+            >
               Profil
             </button>
           </nav>

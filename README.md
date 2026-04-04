@@ -30,9 +30,9 @@ The name comes from the "7th Art" (Cinema) combined with the concept of a "Watch
 
 | Feature | Description | Status |
 | :--- | :--- | :--- |
-| **Data Infrastructure** | Supabase Setup & PostgreSQL Schema | `[In Progress]` |
-| **Auth System** | Login, Sessions & Middleware | `[Planned]` |
-| **Media Search** | TMDB Integration & Real-time Search | `[Planned]` |
+| **Data Infrastructure** | Supabase Setup & PostgreSQL Schema | `[Done]` |
+| **Auth System** | Login, Sessions & Middleware | `[Done]` |
+| **Media Search** | TMDB Integration & Real-time Search | `[Done]` |
 | **Watchlist** | Personal & Shared Tracking | `[Planned]` |
 
 ## Tech Stack
