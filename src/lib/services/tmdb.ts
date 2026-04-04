@@ -9,6 +9,7 @@ export interface TMDBMovie {
   vote_average: number;
   vote_count: number;
   genre_ids: number[];
+  popularity: number;
 }
 
 export interface TMDBSearchResponse {
@@ -19,6 +20,11 @@ export interface TMDBSearchResponse {
 }
 
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+
+// Standard Filtering Constants
+const MIN_POPULARITY = 5;
+const MIN_VOTE_COUNT = 10;
+const EXCLUDED_GENRES = [99, 10770]; // 99: Documentary, 10770: TV Movie
 
 /**
  * Utility to fetch from TMDB with the Bearer token.
@@ -48,7 +54,7 @@ async function fetchTMDB<T>(endpoint: string, options: RequestInit = {}): Promis
 }
 
 /**
- * Searches for movies on TMDB.
+ * Searches for movies on TMDB with robust post-filtering.
  */
 export async function searchMovies(query: string, page = 1): Promise<TMDBSearchResponse> {
   if (!query) {
@@ -65,17 +71,18 @@ export async function searchMovies(query: string, page = 1): Promise<TMDBSearchR
     `/search/movie?query=${encodedQuery}&language=fr-FR&page=${page}&include_adult=false`
   );
 
-  // Filter out documentaries (genre 99) and "Behind the scenes" or "Making of" content
+  /**
+   * Industry Standard Post-Filtering:
+   * 1. Must have a poster (Aesthetic guarantee)
+   * 2. Exclude Documentaries (99) and TV Movies/Behind the scenes (10770)
+   * 3. Must meet a minimum popularity (5) OR vote count (10) threshold
+   */
   const filteredResults = response.results.filter((movie) => {
-    const isDocumentary = movie.genre_ids.includes(99);
-    const lowercaseTitle = movie.title.toLowerCase();
-    const isBehindTheScenes =
-      lowercaseTitle.includes("behind the scenes") ||
-      lowercaseTitle.includes("making of") ||
-      lowercaseTitle.includes("short film") ||
-      movie.overview.toLowerCase().includes("behind the scenes");
+    const hasPoster = movie.poster_path !== null;
+    const isExcludedGenre = movie.genre_ids.some((id) => EXCLUDED_GENRES.includes(id));
+    const meetsQualityBar = movie.popularity >= MIN_POPULARITY || movie.vote_count >= MIN_VOTE_COUNT;
 
-    return !isDocumentary && !isBehindTheScenes;
+    return hasPoster && !isExcludedGenre && meetsQualityBar;
   });
 
   return {
