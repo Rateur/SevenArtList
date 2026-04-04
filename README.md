@@ -32,7 +32,7 @@ The name comes from the "7th Art" (Cinema) combined with the concept of a "Watch
 | :--- | :--- | :--- |
 | **Data Infrastructure** | Supabase Setup & PostgreSQL Schema | `[Done]` |
 | **Auth System** | Login, Sessions & Middleware | `[Done]` |
-| **Media Search** | TMDB Integration & Real-time Search | `[Done]` |
+| **Media Search** | TMDB API (Functional), Debounced Real-time Search, Gold Standard Filtering | `[Done]` |
 | **Watchlist** | Personal & Shared Tracking | `[Planned]` |
 
 ## Tech Stack
