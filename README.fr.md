@@ -63,19 +63,18 @@ Le nom provient du "7ème Art" (le Cinéma) combiné au concept de "Watchlist". 
 ## Structure du Projet
 
 ```text
-seven-art-list/
+SevenArtList/
 ├── src/
-│   ├── app/              # Next.js App Router (Pages & API routes)
-│   ├── components/       # React components
-│   │   └── ui/           # Shadcn UI components
-│   ├── hooks/            # Custom React hooks
-│   ├── lib/              # Utility functions & Supabase client
-│   └── types/            # TypeScript definitions
-├── public/               # Static assets
-├── docs/                 # Technical documentation
-├── tailwind.config.ts    # Tailwind CSS configuration
-├── components.json       # Shadcn UI configuration
-└── package.json          # Dependencies & Scripts
+│   ├── app/                # Next.js App Router (Pages & Server Actions)
+│   ├── components/         # Composants UI (Shadcn UI & custom)
+│   ├── lib/                # Utilitaires & Services API (TMDB, Supabase)
+│   ├── services/           # Logique Backend / Auth
+│   └── proxy.ts            # Configuration Proxy Next.js 16
+├── docs/                   # Documentation technique & Schémas SQL
+├── tasks/                  # Suivi de projet & Leçons (IA-only)
+├── public/                 # Contenu statique
+├── tailwind.config.ts      # Configuration Tailwind CSS
+└── package.json            # Dépendances & scripts projet
 ```
 
 ## Mise en route
@@ -109,3 +108,9 @@ Ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur pour
 2. **Schéma SQL** : Copier le contenu de [docs/database_schema.sql](./docs/database_schema.sql) et l'exécuter dans le **SQL Editor** de Supabase.
 3. **Variables d'environnement** : Créer un fichier `.env.local` à partir du [.env.example](./.env.example) et y renseigner `NEXT_PUBLIC_SUPABASE_URL` et `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
 
+### Configuration TMDB
+
+1. **Création du Compte** : Créez un compte sur [TheMovieDB.org](https://www.themoviedb.org/).
+2. **Paramètres API** : Allez dans la section **API** des paramètres de votre compte.
+3. **Récupération du Jeton** : Récupérez le **Jeton d'accès en lecture à l'API (v4)**.
+4. **Variables d'environnement** : Ajoutez-le dans votre fichier `.env.local` sous la variable `TMDB_TOKEN`.

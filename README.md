@@ -63,19 +63,18 @@ The name comes from the "7th Art" (Cinema) combined with the concept of a "Watch
 ## Project Structure
 
 ```text
-seven-art-list/
+SevenArtList/
 ├── src/
-│   ├── app/              # Next.js App Router (Pages & API routes)
-│   ├── components/       # React components
-│   │   └── ui/           # Shadcn UI components
-│   ├── hooks/            # Custom React hooks
-│   ├── lib/              # Utility functions & Supabase client
-│   └── types/            # TypeScript definitions
-├── public/               # Static assets
-├── docs/                 # Technical documentation
-├── tailwind.config.ts    # Tailwind CSS configuration
-├── components.json       # Shadcn UI configuration
-└── package.json          # Dependencies & Scripts
+│   ├── app/                # Next.js App Router (Pages & Server Actions)
+│   ├── components/         # UI Components (Shadcn UI & custom)
+│   ├── lib/                # Shared utilities & API services (TMDB, Supabase)
+│   ├── services/           # Backend / Auth logic
+│   └── proxy.ts            # Next.js 16 Proxy configuration
+├── docs/                   # Technical documentation & SQL schemas
+├── tasks/                  # Project tracking & Lessons (AI-only)
+├── public/                 # Static assets
+├── tailwind.config.ts      # Tailwind CSS configuration
+└── package.json            # Project dependencies & scripts
 ```
 
 ## Getting Started
@@ -109,3 +108,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 2. **SQL Schema**: Copy the content of [docs/database_schema.sql](./docs/database_schema.sql) and execute it in the **SQL Editor** of your Supabase project.
 3. **Environment Variables**: Create a `.env.local` file from [.env.example](./.env.example) and fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
 
+### TMDB Setup
+
+1. **Create Account**: Create an account on [TheMovieDB.org](https://www.themoviedb.org/).
+2. **API Settings**: Go to the **API** section in your account settings.
+3. **Get Token**: Retrieve the **API Read Access Token (v4)**.
+4. **Environment Variables**: Add it to your `.env.local` file under the variable `TMDB_TOKEN`.
