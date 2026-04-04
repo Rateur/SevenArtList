@@ -33,6 +33,7 @@ The name comes from the "7th Art" (Cinema) combined with the concept of a "Watch
 | **Data Infrastructure** | Supabase Setup & PostgreSQL Schema | `[Done]` |
 | **Auth System** | Login, Sessions & Middleware | `[Done]` |
 | **Media Search** | TMDB API (Functional), Debounced Real-time Search, Gold Standard Filtering | `[Done]` |
+| **Immersive Details** | Movie Details Modal with TMDB data and casting | `[Done]` |
 | **Watchlist** | Personal & Shared Tracking | `[Planned]` |
 
 ## Tech Stack
@@ -64,17 +65,27 @@ The name comes from the "7th Art" (Cinema) combined with the concept of a "Watch
 
 ```text
 SevenArtList/
+├── docs/                   # SQL Schemas & Documentation
+├── public/                 # Static assets (images, logos)
 ├── src/
-│   ├── app/                # Next.js App Router (Pages & Server Actions)
-│   ├── components/         # UI Components (Shadcn UI & custom)
-│   ├── lib/                # Shared utilities & API services (TMDB, Supabase)
+│   ├── app/                # Next.js App Router
+│   │   ├── actions/        # Server Actions (TMDB, Auth)
+│   │   ├── login/          # Auth pages
+│   │   └── ...
+│   ├── components/         # React Components
+│   │   ├── ui/             # Shadcn UI (Reusable Atoms)
+│   │   ├── movie-card.tsx
+│   │   ├── movie-details-dialog.tsx
+│   │   └── ...
+│   ├── lib/                # Shared utilities
+│   │   ├── services/       # TMDB API Service logic
+│   │   └── supabase/       # Supabase client/middleware config
 │   ├── services/           # Backend / Auth logic
-│   └── proxy.ts            # Next.js 16 Proxy configuration
-├── docs/                   # Technical documentation & SQL schemas
-├── tasks/                  # Project tracking & Lessons (AI-only)
-├── public/                 # Static assets
-├── tailwind.config.ts      # Tailwind CSS configuration
-└── package.json            # Project dependencies & scripts
+│   └── proxy.ts            # Next.js Proxy configuration
+├── next.config.ts          # Next.js configuration
+├── package.json            # Dependencies & Scripts
+├── tailwind.config.ts      # Tailwind CSS configuration (if used)
+└── tsconfig.json           # TypeScript configuration
 ```
 
 ## Getting Started
