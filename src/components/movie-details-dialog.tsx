@@ -169,29 +169,16 @@ export function MovieDetailsDialog({
 
         {/* Details Section */}
         <div className="px-6 sm:px-10 py-8 space-y-8 overflow-y-auto max-h-[50vh]">
-          {/* Synopsis */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-zinc-200 border-l-4 border-zinc-700 pl-3">
-              Synopsis
-            </h3>
-            {loading ? (
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-full bg-zinc-900" />
-                <Skeleton className="h-4 w-full bg-zinc-900" />
-                <Skeleton className="h-4 w-2/3 bg-zinc-900" />
-              </div>
-            ) : (
-              <p className="text-zinc-400 leading-relaxed text-sm sm:text-base">
-                {movie?.overview || "Aucun synopsis disponible."}
-              </p>
-            )}
-          </div>
-
           {/* Watch Providers */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-zinc-200 border-l-4 border-zinc-700 pl-3">
-              Où regarder ?
-            </h3>
+            <div className="flex items-baseline gap-2 border-l-4 border-zinc-700 pl-3">
+              <h3 className="text-lg font-semibold text-zinc-200">
+                Où regarder ?
+              </h3>
+              <span className="text-[10px] text-zinc-500 font-medium">
+                (Propulsé par JustWatch)
+              </span>
+            </div>
             {loading ? (
               <div className="flex gap-3">
                 <Skeleton className="h-10 w-10 rounded-lg bg-zinc-900" />
@@ -210,7 +197,7 @@ export function MovieDetailsDialog({
                         target="_blank"
                         rel="noopener noreferrer"
                         className="block transition-all hover:scale-110 active:scale-95 group"
-                        title={provider.provider_name}
+                        title={`Voir sur ${provider.provider_name} (via JustWatch)`}
                       >
                         <div className="relative w-10 h-10 rounded-lg overflow-hidden shadow-lg border border-zinc-800 group-hover:border-zinc-600 transition-colors">
                           <Image
@@ -230,7 +217,7 @@ export function MovieDetailsDialog({
                 {/* VOD (Rent/Buy) */}
                 {(movie.watchProviders.rent || movie.watchProviders.buy) && (
                   <div className="flex items-center gap-3">
-                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest bg-zinc-900/50 px-2 py-1 rounded border border-zinc-800">
+                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest bg-zinc-900/50 px-2 py-1 rounded border border-zinc-800 shrink-0">
                       VOD
                     </span>
                     <div className="flex flex-wrap gap-2">
@@ -248,7 +235,7 @@ export function MovieDetailsDialog({
                           target="_blank"
                           rel="noopener noreferrer"
                           className="block opacity-60 hover:opacity-100 transition-opacity"
-                          title={provider.provider_name}
+                          title={`Voir sur ${provider.provider_name} (via JustWatch)`}
                         >
                           <div className="relative w-7 h-7 rounded-md overflow-hidden border border-zinc-800 shadow-sm">
                             <Image
@@ -266,6 +253,24 @@ export function MovieDetailsDialog({
               </div>
             ) : (
               <p className="text-zinc-500 text-sm italic">Non disponible en streaming actuellement.</p>
+            )}
+          </div>
+
+          {/* Synopsis */}
+          <div className="space-y-3">
+            <h3 className="text-lg font-semibold text-zinc-200 border-l-4 border-zinc-700 pl-3">
+              Synopsis
+            </h3>
+            {loading ? (
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-full bg-zinc-900" />
+                <Skeleton className="h-4 w-full bg-zinc-900" />
+                <Skeleton className="h-4 w-2/3 bg-zinc-900" />
+              </div>
+            ) : (
+              <p className="text-zinc-400 leading-relaxed text-sm sm:text-base">
+                {movie?.overview || "Aucun synopsis disponible."}
+              </p>
             )}
           </div>
 
