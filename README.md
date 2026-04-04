@@ -33,7 +33,7 @@ The name comes from the "7th Art" (Cinema) combined with the concept of a "Watch
 | **Data Infrastructure** | Supabase Setup & PostgreSQL Schema | `[Done]` |
 | **Auth System** | Login, Sessions & Middleware | `[Done]` |
 | **Media Search** | TMDB API (Functional), Debounced Real-time Search, Gold Standard Filtering | `[Done]` |
-| **Immersive Details** | Movie Details Modal with TMDB data and casting | `[Done]` |
+| **Movie Details (Modal)** | Immersive modal with TMDB data and casting | `[Done]` |
 | **Watchlist** | Personal & Shared Tracking | `[Planned]` |
 
 ## Tech Stack
@@ -69,23 +69,22 @@ SevenArtList/
 ├── public/                 # Static assets (images, logos)
 ├── src/
 │   ├── app/                # Next.js App Router
-│   │   ├── actions/        # Server Actions (TMDB, Auth)
+│   │   ├── actions/        # Server Actions (movie.ts, search.ts)
 │   │   ├── login/          # Auth pages
 │   │   └── ...
 │   ├── components/         # React Components
-│   │   ├── ui/             # Shadcn UI (Reusable Atoms)
+│   │   ├── ui/             # Shadcn UI (dialog, badge, skeleton, etc.)
 │   │   ├── movie-card.tsx
 │   │   ├── movie-details-dialog.tsx
 │   │   └── ...
 │   ├── lib/                # Shared utilities
 │   │   ├── services/       # TMDB API Service logic
-│   │   └── supabase/       # Supabase client/middleware config
-│   ├── services/           # Backend / Auth logic
-│   └── proxy.ts            # Next.js Proxy configuration
+│   │   └── supabase/       # Config client/middleware config
+│   └── services/           # Backend / Auth logic
+├── tasks/                  # Tasks, Lessons & Context
 ├── next.config.ts          # Next.js configuration
 ├── package.json            # Dependencies & Scripts
-├── tailwind.config.ts      # Tailwind CSS configuration (if used)
-└── tsconfig.json           # TypeScript configuration
+└── ...
 ```
 
 ## Getting Started
