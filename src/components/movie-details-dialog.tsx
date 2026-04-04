@@ -149,6 +149,16 @@ export function MovieDetailsDialog({
                         </Badge>
                       ))}
                     </div>
+
+                    <div className="mt-6">
+                      <Button 
+                        variant="outline" 
+                        className="w-full sm:w-fit h-11 px-6 border-zinc-800 hover:bg-zinc-800 text-zinc-300 gap-2 text-sm font-medium transition-all"
+                      >
+                        <Plus className="h-4 w-4" />
+                        Ajouter à ma liste
+                      </Button>
+                    </div>
                   </>
                 )}
               </div>
@@ -215,17 +225,6 @@ export function MovieDetailsDialog({
                 <p className="text-zinc-500 text-sm col-span-full italic">Information indisponible.</p>
               )}
             </div>
-          </div>
-
-          {/* Actions */}
-          <div className="pt-4 flex justify-end">
-            <Button 
-              variant="outline" 
-              className="w-full sm:w-auto h-12 px-8 border-zinc-800 hover:bg-zinc-800 text-zinc-300 gap-2 text-base font-medium"
-            >
-              <Plus className="h-5 w-5" />
-              Ajouter à ma liste
-            </Button>
           </div>
         </div>
       </DialogContent>
