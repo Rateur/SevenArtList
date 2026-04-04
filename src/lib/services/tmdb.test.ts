@@ -11,31 +11,55 @@ describe("TMDB Service", () => {
   });
 
   describe("searchMovies", () => {
-    it("should return filtered results (excluding documentaries and behind-the-scenes)", async () => {
+    it("should return filtered results based on industry standard rules", async () => {
       const mockMovies = [
         {
           id: 1,
-          title: "Inception",
-          genre_ids: [28, 878], // Action, Sci-Fi
-          overview: "A great movie.",
+          title: "Valid Movie",
+          poster_path: "/path.jpg",
+          genre_ids: [28],
+          popularity: 10,
+          vote_count: 5,
         },
         {
           id: 2,
-          title: "Inception: Behind the Scenes",
-          genre_ids: [99], // Documentary
-          overview: "How we made it.",
+          title: "No Poster",
+          poster_path: null,
+          genre_ids: [28],
+          popularity: 10,
+          vote_count: 5,
         },
         {
           id: 3,
-          title: "Making of Inception",
-          genre_ids: [28],
-          overview: "A short look.",
+          title: "Documentary",
+          poster_path: "/path.jpg",
+          genre_ids: [99],
+          popularity: 10,
+          vote_count: 5,
         },
         {
           id: 4,
-          title: "The Dark Knight",
-          genre_ids: [28, 80],
-          overview: "Another great movie.",
+          title: "Low Quality",
+          poster_path: "/path.jpg",
+          genre_ids: [28],
+          popularity: 2,
+          vote_count: 5,
+        },
+        {
+          id: 5,
+          title: "TV Movie",
+          poster_path: "/path.jpg",
+          genre_ids: [10770],
+          popularity: 20,
+          vote_count: 100,
+        },
+        {
+          id: 6,
+          title: "High Votes Valid",
+          poster_path: "/path.jpg",
+          genre_ids: [28],
+          popularity: 2,
+          vote_count: 50,
         },
       ];
 
@@ -46,15 +70,16 @@ describe("TMDB Service", () => {
           page: 1,
           results: mockMovies,
           total_pages: 1,
-          total_results: 4,
+          total_results: 6,
         }),
       });
 
-      const response = await searchMovies("Inception");
+      const response = await searchMovies("test");
 
+      // Only "Valid Movie" (1) and "High Votes Valid" (6) should pass
       expect(response.results).toHaveLength(2);
-      expect(response.results[0].title).toBe("Inception");
-      expect(response.results[1].title).toBe("The Dark Knight");
+      expect(response.results[0].title).toBe("Valid Movie");
+      expect(response.results[1].title).toBe("High Votes Valid");
     });
 
     it("should throw error if TMDB_TOKEN is missing", async () => {

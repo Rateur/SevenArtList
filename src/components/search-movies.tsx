@@ -68,16 +68,16 @@ export function SearchMovies() {
             ))}
           </div>
         ) : hasSearched ? (
-          <div className="flex flex-col items-center justify-center pt-20 text-center animate-in fade-in duration-500">
-            <div className="h-20 w-20 rounded-full bg-zinc-50 flex items-center justify-center dark:bg-zinc-900/50 mb-6 border border-zinc-100 dark:border-zinc-800">
-              <Search className="h-8 w-8 text-zinc-300" />
+          <div className="flex flex-col items-center justify-center pt-24 text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="h-24 w-24 rounded-full bg-zinc-50 flex items-center justify-center dark:bg-zinc-900/30 mb-8 border border-zinc-100/50 dark:border-zinc-800/50">
+              <Search className="h-10 w-10 text-zinc-200 dark:text-zinc-800" strokeWidth={1.5} />
             </div>
-            <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
-              Aucun résultat trouvé
+            <h3 className="text-2xl font-cinzel font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+              Aucun résultat
             </h3>
-            <p className="mt-2 text-zinc-500 max-w-xs mx-auto">
-              Nous n&apos;avons trouvé aucun film correspondant à &quot;{query}&quot;.
-              Essayez avec un autre titre.
+            <p className="mt-4 text-zinc-500 dark:text-zinc-400 max-w-sm mx-auto leading-relaxed">
+              Nous filtrons rigoureusement les résultats pour ne garder que le meilleur du septième art. 
+              Aucun film correspondant à &quot;{query}&quot; n&apos;a été trouvé.
             </p>
           </div>
         ) : (
