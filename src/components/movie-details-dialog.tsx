@@ -15,10 +15,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { 
   MovieDetails, 
   getPosterUrl, 
-  getBackdropUrl,
-  getProviderLogoUrl
+  getBackdropUrl
 } from "@/lib/services/tmdb";
-import { getMovieDetailsAction } from "@/app/actions/movie";
+import { getMovieDetailsAction, ExtendedMovieDetails } from "@/app/actions/movie";
 
 interface MovieDetailsDialogProps {
   movieId: number | null;
@@ -31,7 +30,7 @@ export function MovieDetailsDialog({
   open, 
   onOpenChange 
 }: MovieDetailsDialogProps) {
-  const [movie, setMovie] = React.useState<MovieDetails | null>(null);
+  const [movie, setMovie] = React.useState<ExtendedMovieDetails | null>(null);
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
@@ -169,14 +168,13 @@ export function MovieDetailsDialog({
 
         {/* Details Section */}
         <div className="px-6 sm:px-10 py-8 space-y-8 overflow-y-auto max-h-[50vh]">
-          {/* Watch Providers */}
-          <div className="space-y-4">
+          {/* Watch Providers */}          <div className="space-y-4">
             <div className="flex items-baseline gap-2 border-l-4 border-zinc-700 pl-3">
               <h3 className="text-lg font-semibold text-zinc-200">
                 Où regarder ?
               </h3>
               <span className="text-[10px] text-zinc-500 font-medium">
-                (Propulsé par JustWatch)
+                (Liens directs via Watchmode)
               </span>
             </div>
             {loading ? (
@@ -185,66 +183,46 @@ export function MovieDetailsDialog({
                 <Skeleton className="h-10 w-10 rounded-lg bg-zinc-900" />
                 <Skeleton className="h-10 w-10 rounded-lg bg-zinc-900" />
               </div>
-            ) : movie?.watchProviders ? (
+            ) : (movie?.streamingSources || movie?.vodSources) ? (
               <div className="space-y-4">
-                {/* Streaming (Flatrate) */}
-                {movie.watchProviders.flatrate && movie.watchProviders.flatrate.length > 0 ? (
-                  <div className="flex flex-wrap gap-3">
-                    {movie.watchProviders.flatrate.map((provider) => (
+                {/* Streaming (Subscription / Free) */}
+                {movie.streamingSources && movie.streamingSources.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {movie.streamingSources.map((source) => (
                       <a
-                        key={provider.provider_id}
-                        href={movie.watchProviders?.link}
+                        key={source.source_id}
+                        href={source.web_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block transition-all hover:scale-110 active:scale-95 group"
-                        title={`Voir sur ${provider.provider_name} (via JustWatch)`}
+                        className="inline-flex items-center px-3 py-1.5 rounded-md bg-zinc-800/80 hover:bg-zinc-700 text-zinc-200 text-xs font-medium border border-zinc-700 transition-all hover:scale-105 active:scale-95 group shadow-sm"
+                        title={`Regarder sur ${source.name}`}
                       >
-                        <div className="relative w-10 h-10 rounded-lg overflow-hidden shadow-lg border border-zinc-800 group-hover:border-zinc-600 transition-colors">
-                          <Image
-                            src={getProviderLogoUrl(provider.logo_path)}
-                            alt={provider.provider_name}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
+                        <span className="group-hover:text-white transition-colors">{source.name}</span>
+                        <div className="ml-2 w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
                       </a>
                     ))}
                   </div>
-                ) : !movie.watchProviders.rent && !movie.watchProviders.buy ? (
+                ) : !movie.vodSources ? (
                   <p className="text-zinc-500 text-sm italic">Non disponible en streaming actuellement.</p>
                 ) : null}
 
                 {/* VOD (Rent/Buy) */}
-                {(movie.watchProviders.rent || movie.watchProviders.buy) && (
+                {movie.vodSources && movie.vodSources.length > 0 && (
                   <div className="flex items-center gap-3">
                     <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest bg-zinc-900/50 px-2 py-1 rounded border border-zinc-800 shrink-0">
                       VOD
                     </span>
                     <div className="flex flex-wrap gap-2">
-                      {Array.from(
-                        new Map(
-                          [...(movie.watchProviders.rent || []), ...(movie.watchProviders.buy || [])].map((p) => [
-                            p.provider_id,
-                            p,
-                          ])
-                        ).values()
-                      ).map((provider) => (
+                      {movie.vodSources.map((source) => (
                         <a
-                          key={provider.provider_id}
-                          href={movie.watchProviders?.link}
+                          key={source.source_id}
+                          href={source.web_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="block opacity-60 hover:opacity-100 transition-opacity"
-                          title={`Voir sur ${provider.provider_name} (via JustWatch)`}
+                          className="text-[11px] text-zinc-400 hover:text-zinc-200 transition-colors bg-zinc-900/30 px-2 py-1 rounded border border-zinc-800/50 hover:border-zinc-700"
+                          title={`Acheter ou louer sur ${source.name}`}
                         >
-                          <div className="relative w-7 h-7 rounded-md overflow-hidden border border-zinc-800 shadow-sm">
-                            <Image
-                              src={getProviderLogoUrl(provider.logo_path)}
-                              alt={provider.provider_name}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
+                          {source.name}
                         </a>
                       ))}
                     </div>
@@ -252,7 +230,7 @@ export function MovieDetailsDialog({
                 )}
               </div>
             ) : (
-              <p className="text-zinc-500 text-sm italic">Non disponible en streaming actuellement.</p>
+              <p className="text-zinc-500 text-sm italic">Non disponible pour le moment.</p>
             )}
           </div>
 
