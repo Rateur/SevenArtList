@@ -112,3 +112,25 @@ CREATE POLICY "Users can update own watchlist items" ON watchlists
 
 CREATE POLICY "Users can delete own watchlist items" ON watchlists
   FOR DELETE USING (auth.uid() = user_id);
+
+-- PHASE 5: User Media (Watchlist)
+CREATE TABLE public.user_media (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+    tmdb_id INTEGER NOT NULL,
+    media_type TEXT CHECK (media_type IN ('movie', 'tv')) NOT NULL,
+    status TEXT CHECK (status IN ('to_watch', 'in_progress', 'completed', 'dropped')) DEFAULT 'to_watch',
+    rating INTEGER CHECK (rating >= 0 AND rating <= 100),
+    progress INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    UNIQUE(user_id, tmdb_id, media_type)
+);
+
+ALTER TABLE public.user_media ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage their own media items" 
+ON public.user_media 
+FOR ALL 
+USING (auth.uid() = user_id) 
+WITH CHECK (auth.uid() = user_id);
