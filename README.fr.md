@@ -8,8 +8,7 @@ Centralisez votre liste de visionnage. Synchronisez-vous avec votre partenaire. 
 [![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Supabase](https://img.shields.io/badge/Supabase-1C1C1C?style=flat-square&logo=supabase&logoColor=3ECF8E)](https://supabase.com/)
-[![TMDB](https://img.shields.io/badge/TMDB-01B4E4?style=flat-square&logo=themoviedb&logoColor=white)](https://www.themoviedb.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Watchmode](https://img.shields.io/badge/Watchmode-CEC9FF?style=flat-square&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAWklEQVQ4y2NgGAWjYBSMAlSAsZHxf0pS8v+k5OT/pKTk/0lJSf9JSUn/SUnJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf+TUlL/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf+TUlL/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/0lJSf9JSUn/SUlJ/GkFBQFAAAAAASUVORK5CYII=&logoColor=black)](https://api.watchmode.com/)
 [![GitHub Stars](https://img.shields.io/github/stars/Rateur/SevenArtList?style=flat-square)](https://github.com/Rateur/SevenArtList/stargazers)
 [![CI](https://github.com/Rateur/SevenArtList/actions/workflows/ci.yml/badge.svg)](https://github.com/Rateur/SevenArtList/actions/workflows/ci.yml)
 
@@ -64,6 +63,12 @@ Le nom provient du "7ème Art" (le Cinéma) combiné au concept de "Watchlist". 
         <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_2-d537fb228cf3ded904ef09b136fe3fec72548ebc1fea3fbbd1ad9e36364db38b.svg" width="48" height="48" alt="TMDB" />
       </a>
       <br />TMDB
+    </td>
+    <td align="center" width="96">
+      <a href="https://api.watchmode.com/">
+        <img src="https://api.watchmode.com/images/watchmode_logo_stacked.png" width="48" height="48" alt="Watchmode" />
+      </a>
+      <br />Watchmode
     </td>
   </tr>
 </table>
@@ -131,3 +136,11 @@ Ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur pour
 2. **Paramètres API** : Allez dans la section **API** des paramètres de votre compte.
 3. **Récupération du Jeton** : Récupérez le **Jeton d'accès en lecture à l'API (v4)**.
 4. **Variables d'environnement** : Ajoutez-le dans votre fichier `.env.local` sous la variable `TMDB_TOKEN`.
+5. **Documentation** : TMDB est utilisé pour les métadonnées (synopsis, affiches, casting).
+
+### Configuration Watchmode (Streaming Links)
+
+1. **Création du Compte** : Créez un compte gratuit sur [api.watchmode.com](https://api.watchmode.com/).
+2. **Récupération de la Clé** : Récupérez votre clé API depuis le tableau de bord.
+3. **Variables d'environnement** : Ajoutez-la dans votre fichier `.env.local` sous la variable `WATCHMODE_API_KEY`.
+4. **Deep Links** : Watchmode est utilisé pour obtenir des liens directs vers les services de streaming (Netflix, Prime, etc.), évitant les redirections JustWatch pour une meilleure UX.
