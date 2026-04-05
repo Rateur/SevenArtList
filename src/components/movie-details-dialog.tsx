@@ -18,7 +18,8 @@ import {
   getBackdropUrl,
   getProviderLogoUrl
 } from "@/lib/services/tmdb";
-import { getMovieDetailsAction, ExtendedMovieDetails, PROVIDER_NAME_MAPPING } from "@/app/actions/movie";
+import { getMovieDetailsAction, ExtendedMovieDetails } from "@/app/actions/movie";
+import { PROVIDER_NAME_MAPPING } from "@/lib/constants/providers";
 
 interface MovieDetailsDialogProps {
   movieId: number | null;
@@ -92,7 +93,7 @@ export function MovieDetailsDialog({
     if (!match && PROVIDER_NAME_MAPPING[normalizedTarget]) {
       const alternatives = PROVIDER_NAME_MAPPING[normalizedTarget];
       match = allTMDBProviders.find(p => 
-        alternatives.some(alt => normalize(p.provider_name) === normalize(alt))
+        alternatives.some((alt: string) => normalize(p.provider_name) === normalize(alt))
       );
     }
 
