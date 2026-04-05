@@ -15,7 +15,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { 
   MovieDetails, 
   getPosterUrl, 
-  getBackdropUrl
+  getBackdropUrl,
+  getProviderLogoUrl
 } from "@/lib/services/tmdb";
 import { getMovieDetailsAction, ExtendedMovieDetails } from "@/app/actions/movie";
 
@@ -65,6 +66,28 @@ export function MovieDetailsDialog({
     : "N/A";
 
   const cast = movie?.credits?.cast.slice(0, 5) || [];
+
+  /**
+   * Helper to match Watchmode platform names with TMDB provider logos.
+   */
+  const getTMDBLogo = (platformName: string) => {
+    if (!movie?.tmdbProviders) return null;
+
+    const normalize = (name: string) => 
+      name.toLowerCase().replace(/\s+/g, "").replace(/[^\w]/g, "");
+
+    const normalizedTarget = normalize(platformName);
+    
+    // Check in flatrate, rent, and buy providers from TMDB
+    const allTMDBProviders = [
+      ...(movie.tmdbProviders.flatrate || []),
+      ...(movie.tmdbProviders.rent || []),
+      ...(movie.tmdbProviders.buy || [])
+    ];
+
+    const match = allTMDBProviders.find(p => normalize(p.provider_name) === normalizedTarget);
+    return match ? getProviderLogoUrl(match.logo_path) : null;
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -187,20 +210,37 @@ export function MovieDetailsDialog({
               <div className="space-y-4">
                 {/* Streaming (Subscription / Free) */}
                 {movie.streamingSources && movie.streamingSources.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {movie.streamingSources.map((source) => (
-                      <a
-                        key={source.source_id}
-                        href={source.web_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center px-3 py-1.5 rounded-md bg-zinc-800/80 hover:bg-zinc-700 text-zinc-200 text-xs font-medium border border-zinc-700 transition-all hover:scale-105 active:scale-95 group shadow-sm"
-                        title={`Regarder sur ${source.name}`}
-                      >
-                        <span className="group-hover:text-white transition-colors">{source.name}</span>
-                        <div className="ml-2 w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
-                      </a>
-                    ))}
+                  <div className="flex flex-wrap gap-4">
+                    {movie.streamingSources.map((source) => {
+                      const logoUrl = getTMDBLogo(source.name);
+                      
+                      return (
+                        <a
+                          key={source.source_id}
+                          href={source.web_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group relative transition-all hover:scale-110 active:scale-95"
+                          title={`Regarder sur ${source.name}`}
+                        >
+                          {logoUrl ? (
+                            <div className="relative w-12 h-12 rounded-xl overflow-hidden shadow-lg border border-zinc-800 group-hover:border-zinc-500 transition-colors">
+                              <Image
+                                src={logoUrl}
+                                alt={source.name}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                          ) : (
+                            <div className="flex items-center px-3 py-2 rounded-xl bg-zinc-800/80 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold border border-zinc-700 group-hover:border-zinc-500 transition-colors shadow-sm">
+                              {source.name}
+                              <div className="ml-2 w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
+                            </div>
+                          )}
+                        </a>
+                      );
+                    })}
                   </div>
                 ) : !movie.vodSources ? (
                   <p className="text-zinc-500 text-sm italic">Non disponible en streaming actuellement.</p>
@@ -208,23 +248,40 @@ export function MovieDetailsDialog({
 
                 {/* VOD (Rent/Buy) */}
                 {movie.vodSources && movie.vodSources.length > 0 && (
-                  <div className="flex items-center gap-3">
-                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest bg-zinc-900/50 px-2 py-1 rounded border border-zinc-800 shrink-0">
+                  <div className="flex items-center gap-4 py-2 border-t border-zinc-900/50">
+                    <span className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em] px-2 py-0.5 rounded border border-zinc-800/50 shrink-0">
                       VOD
                     </span>
-                    <div className="flex flex-wrap gap-2">
-                      {movie.vodSources.map((source) => (
-                        <a
-                          key={source.source_id}
-                          href={source.web_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[11px] text-zinc-400 hover:text-zinc-200 transition-colors bg-zinc-900/30 px-2 py-1 rounded border border-zinc-800/50 hover:border-zinc-700"
-                          title={`Acheter ou louer sur ${source.name}`}
-                        >
-                          {source.name}
-                        </a>
-                      ))}
+                    <div className="flex flex-wrap gap-3">
+                      {movie.vodSources.map((source) => {
+                        const logoUrl = getTMDBLogo(source.name);
+                        
+                        return (
+                          <a
+                            key={source.source_id}
+                            href={source.web_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group transition-all hover:opacity-100 opacity-60"
+                            title={`Acheter ou louer sur ${source.name}`}
+                          >
+                            {logoUrl ? (
+                              <div className="relative w-8 h-8 rounded-lg overflow-hidden border border-zinc-800/80 shadow-sm">
+                                <Image
+                                  src={logoUrl}
+                                  alt={source.name}
+                                  fill
+                                  className="object-cover"
+                                />
+                              </div>
+                            ) : (
+                              <span className="text-[10px] text-zinc-400 font-medium hover:text-zinc-200">
+                                {source.name}
+                              </span>
+                            )}
+                          </a>
+                        );
+                      })}
                     </div>
                   </div>
                 )}

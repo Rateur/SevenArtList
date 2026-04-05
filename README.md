@@ -66,7 +66,7 @@ The name comes from the "7th Art" (Cinema) combined with the concept of a "Watch
     </td>
     <td align="center" width="96">
       <a href="https://api.watchmode.com/">
-        <img src="https://api.watchmode.com/images/watchmode_logo_stacked.png" width="48" height="48" alt="Watchmode" />
+        <img src="https://cdn.watchmode.com/assets/favicons/apple-touch-icon.png" width="40" height="40" alt="Watchmode" />
       </a>
       <br />Watchmode
     </td>

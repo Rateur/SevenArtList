@@ -1,23 +1,26 @@
 "use server";
 
-import { getMovieDetails, MovieDetails } from "@/lib/services/tmdb";
+import { getMovieDetails, getMovieProviders, MovieDetails, WatchProvidersData } from "@/lib/services/tmdb";
 import { getWatchmodeSources, WatchmodeSource } from "@/lib/services/watchmode";
 
 export interface ExtendedMovieDetails extends MovieDetails {
   streamingSources?: WatchmodeSource[];
   vodSources?: WatchmodeSource[];
+  tmdbProviders?: WatchProvidersData;
 }
 
 /**
- * Server action to fetch movie details securely, including direct deep links from Watchmode.
+ * Server action to fetch movie details securely, including direct deep links from Watchmode
+ * and platform logos from TMDB.
  * @param id - The TMDB movie ID.
- * @returns - The detailed movie information with Watchmode source data.
+ * @returns - The detailed movie information with merged source data.
  */
 export async function getMovieDetailsAction(id: number): Promise<ExtendedMovieDetails> {
   try {
-    const [details, sources] = await Promise.all([
+    const [details, sources, tmdbProviders] = await Promise.all([
       getMovieDetails(id),
-      getWatchmodeSources(id, "movie")
+      getWatchmodeSources(id, "movie"),
+      getMovieProviders(id)
     ]);
 
     // Categorize sources: streaming (subscription/free) and VOD (rent/buy)
@@ -27,7 +30,8 @@ export async function getMovieDetailsAction(id: number): Promise<ExtendedMovieDe
     return {
       ...details,
       streamingSources: streamingSources.length > 0 ? streamingSources : undefined,
-      vodSources: vodSources.length > 0 ? vodSources : undefined
+      vodSources: vodSources.length > 0 ? vodSources : undefined,
+      tmdbProviders: tmdbProviders || undefined
     };
   } catch (error) {
     console.error("Get Movie Details Action Error:", error);
