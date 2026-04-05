@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Star, Clock, Calendar, Users, Plus } from "lucide-react";
+import { Star, Clock, Calendar, Users, Check, Plus, Loader2 } from "lucide-react";
 import { 
   Dialog, 
   DialogContent, 
@@ -19,7 +19,9 @@ import {
   getProviderLogoUrl
 } from "@/lib/services/tmdb";
 import { getMovieDetailsAction, ExtendedMovieDetails } from "@/app/actions/movie";
+import { toggleWatchlistAction, checkWatchlistStatusAction } from "@/app/actions/watchlist";
 import { PROVIDER_NAME_MAPPING } from "@/lib/constants/providers";
+import { toast } from "sonner";
 
 interface MovieDetailsDialogProps {
   movieId: number | null;
@@ -34,14 +36,20 @@ export function MovieDetailsDialog({
 }: MovieDetailsDialogProps) {
   const [movie, setMovie] = React.useState<ExtendedMovieDetails | null>(null);
   const [loading, setLoading] = React.useState(false);
+  const [isInWatchlist, setIsInWatchlist] = React.useState(false);
+  const [isPending, startTransition] = React.useTransition();
 
   React.useEffect(() => {
     if (open && movieId) {
       const fetchDetails = async () => {
         setLoading(true);
         try {
-          const details = await getMovieDetailsAction(movieId);
+          const [details, status] = await Promise.all([
+            getMovieDetailsAction(movieId),
+            checkWatchlistStatusAction(movieId, 'movie')
+          ]);
           setMovie(details);
+          setIsInWatchlist(status);
         } catch (error) {
           console.error("Failed to fetch movie details:", error);
         } finally {
@@ -52,8 +60,28 @@ export function MovieDetailsDialog({
     } else if (!open) {
       // Clear movie data when dialog closes to avoid flash of old data
       setMovie(null);
+      setIsInWatchlist(false);
     }
   }, [open, movieId]);
+
+  const handleToggleWatchlist = async () => {
+    if (!movieId) return;
+    
+    startTransition(async () => {
+      try {
+        const result = await toggleWatchlistAction(movieId, 'movie');
+        setIsInWatchlist(result.status === 'added');
+        
+        if (result.status === 'added') {
+          toast.success(`${movie?.title} ajouté à votre liste !`);
+        } else {
+          toast.info(`${movie?.title} retiré de votre liste.`);
+        }
+      } catch (error: any) {
+        toast.error(error.message || "Une erreur est survenue.");
+      }
+    });
+  };
 
   const formatRuntime = (minutes: number | null) => {
     if (!minutes) return "N/A";
@@ -186,11 +214,23 @@ export function MovieDetailsDialog({
 
                     <div className="mt-6">
                       <Button 
-                        variant="outline" 
-                        className="w-full sm:w-fit h-11 px-6 border-zinc-800 hover:bg-zinc-800 text-zinc-300 gap-2 text-sm font-medium transition-all"
+                        variant={isInWatchlist ? "secondary" : "outline"}
+                        className={`w-full sm:w-fit h-11 px-6 gap-2 text-sm font-medium transition-all ${
+                          isInWatchlist 
+                            ? "bg-zinc-800 text-zinc-100 border-zinc-700 hover:bg-zinc-700" 
+                            : "border-zinc-800 hover:bg-zinc-800 text-zinc-300"
+                        }`}
+                        onClick={handleToggleWatchlist}
+                        disabled={isPending}
                       >
-                        <Plus className="h-4 w-4" />
-                        Ajouter à ma liste
+                        {isPending ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : isInWatchlist ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          <Plus className="h-4 w-4" />
+                        )}
+                        {isInWatchlist ? "Dans ma liste" : "Ajouter à ma liste"}
                       </Button>
                     </div>
                   </>

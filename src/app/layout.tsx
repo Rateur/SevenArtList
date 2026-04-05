@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   description: "Gérez vos listes de films et séries en solo ou à deux.",
 };
 
+import { Toaster } from "@/components/ui/sonner";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,10 +32,13 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="fr"
       className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <Toaster richColors closeButton position="top-right" />
+      </body>
     </html>
   );
 }
