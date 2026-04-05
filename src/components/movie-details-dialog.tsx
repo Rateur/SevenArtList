@@ -74,8 +74,8 @@ export function MovieDetailsDialog({
   const getTMDBLogo = (platformName: string) => {
     if (!movie?.tmdbProviders) return null;
 
-    const normalize = (name: string) => 
-      name.toLowerCase().replace(/\s+/g, "").replace(/[^\w]/g, "");
+    const normalize = (str: string) => 
+      str.toLowerCase().replace(/[\s+]/g, "");
 
     const normalizedTarget = normalize(platformName);
     
