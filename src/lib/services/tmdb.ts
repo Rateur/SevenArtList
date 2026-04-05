@@ -36,32 +36,12 @@ export interface Genre {
   name: string;
 }
 
-export interface WatchProvider {
-  provider_id: number;
-  provider_name: string;
-  logo_path: string;
-}
-
-export interface WatchProvidersData {
-  link: string;
-  flatrate?: WatchProvider[];
-  rent?: WatchProvider[];
-  buy?: WatchProvider[];
-}
-
-export interface WatchProvidersResponse {
-  id: number;
-  results: {
-    [region: string]: WatchProvidersData;
-  };
-}
 
 export interface MovieDetails extends TMDBMovie {
   runtime: number | null;
   genres: Genre[];
   tagline: string | null;
   credits?: MovieCredits;
-  watchProviders?: WatchProvidersData;
 }
 
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
@@ -145,18 +125,6 @@ export async function getMovieDetails(id: number): Promise<MovieDetails> {
   );
 }
 
-/**
- * Fetches watch providers (streaming, rent, buy) for a specific movie.
- */
-export async function getMovieProviders(id: number, region: string = "FR"): Promise<WatchProvidersData | null> {
-  try {
-    const response = await fetchTMDB<WatchProvidersResponse>(`/movie/${id}/watch/providers`);
-    return response.results[region] || null;
-  } catch (error) {
-    console.error(`Error fetching providers for movie ${id}:`, error);
-    return null;
-  }
-}
 
 /**
  * Gets the full poster URL for a given path.
@@ -171,12 +139,5 @@ export function getPosterUrl(path: string | null, size: "w342" | "w500" | "w780"
  */
 export function getBackdropUrl(path: string | null, size: "w780" | "w1280" | "original" = "w1280"): string {
   if (!path) return ""; 
-  return `https://image.tmdb.org/t/p/${size}${path}`;
-}
-
-/**
- * Gets the full provider logo URL.
- */
-export function getProviderLogoUrl(path: string, size: "w45" | "original" = "w45"): string {
   return `https://image.tmdb.org/t/p/${size}${path}`;
 }
