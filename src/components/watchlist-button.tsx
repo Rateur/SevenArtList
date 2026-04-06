@@ -30,10 +30,10 @@ interface WatchlistButtonProps {
 }
 
 const statusLabels: Record<WatchlistStatus, { label: string; icon: React.ReactNode }> = {
-  to_watch: { label: "À voir", icon: <Eye className="w-4 h-4 mr-2" /> },
-  in_progress: { label: "En cours", icon: <PlayCircle className="w-4 h-4 mr-2" /> },
-  completed: { label: "Terminé", icon: <Check className="w-4 h-4 mr-2" /> },
-  dropped: { label: "Abandonné", icon: <X className="w-4 h-4 mr-2" /> },
+  to_watch: { label: "À voir", icon: <Eye className="h-4 w-4" /> },
+  in_progress: { label: "En cours", icon: <PlayCircle className="h-4 w-4" /> },
+  completed: { label: "Terminé", icon: <Check className="h-4 w-4" /> },
+  dropped: { label: "Abandonné", icon: <X className="h-4 w-4" /> },
 };
 
 export function WatchlistButton({ 
@@ -100,13 +100,10 @@ export function WatchlistButton({
       >
         {initialData ? (
           <>
-            <Check className="h-4 w-4 text-green-500" />
-            <div className="flex items-center">
-              {currentLabel?.icon}
-              <span>{currentLabel?.label}</span>
-            </div>
+            {currentLabel?.icon}
+            <span>{currentLabel?.label}</span>
             {starDisplay && (
-              <span className="ml-1 text-yellow-500 flex items-center gap-0.5">
+              <span className="text-yellow-500 flex items-center gap-0.5">
                 <Star className="h-3 w-3 fill-yellow-500" />
                 {starDisplay}/5
               </span>
@@ -137,7 +134,7 @@ export function WatchlistButton({
                     value={key}
                     className="focus:bg-accent focus:text-accent-foreground transition-colors py-2.5"
                   >
-                    <div className="flex items-center">
+                    <div className="flex items-center gap-2">
                       {icon}
                       <span>{label}</span>
                     </div>
