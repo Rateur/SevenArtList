@@ -5,15 +5,12 @@ import Image from "next/image";
 import { Star, Clock, Calendar, Users, Check, Plus, Loader2 } from "lucide-react";
 import { 
   Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle 
+  DialogContent 
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { 
-  MovieDetails, 
   getPosterUrl, 
   getBackdropUrl,
   getProviderLogoUrl
@@ -77,8 +74,9 @@ export function MovieDetailsDialog({
         } else {
           toast.info(`${movie?.title} retiré de votre liste.`);
         }
-      } catch (error: any) {
-        toast.error(error.message || "Une erreur est survenue.");
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : "Une erreur est survenue.";
+        toast.error(errorMessage);
       }
     });
   };
