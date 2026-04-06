@@ -120,13 +120,15 @@ export function WatchlistButton({
         )}
       </PopoverTrigger>
 
-      <PopoverContent className="w-80 p-4 bg-popover border-border text-popover-foreground shadow-md rounded-2xl">
+      <PopoverContent className="w-80 p-4 bg-zinc-950 border border-zinc-800 shadow-2xl z-50 rounded-2xl">
         <div className="space-y-6">
           <div className="space-y-2">
             <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Statut</label>
             <Select value={status} onValueChange={(v) => setStatus(v as WatchlistStatus)}>
               <SelectTrigger className="bg-zinc-900 border-zinc-800 focus:ring-violet-500/20 h-10 rounded-xl transition-all">
-                <SelectValue placeholder="Choisir un statut" />
+                <SelectValue placeholder="Choisir un statut">
+                  {statusLabels[status].label}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-zinc-900 border-zinc-800 rounded-xl overflow-hidden">
                 {Object.entries(statusLabels).map(([key, { label, icon }]) => (
@@ -180,9 +182,10 @@ export function WatchlistButton({
 
           <div className="pt-2 space-y-3">
             <Button 
+              variant="default"
               onClick={handleSave} 
               disabled={isPending}
-              className="w-full h-11 font-bold rounded-xl active:scale-95 transition-all"
+              className="w-full h-11 font-bold rounded-xl active:scale-95 transition-all bg-white text-black hover:bg-zinc-200"
             >
               {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Enregistrer"}
             </Button>
