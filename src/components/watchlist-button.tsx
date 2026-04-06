@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Star, Check, Plus, Loader2, Trash2 } from "lucide-react";
+import { Star, Check, Plus, Loader2, Trash2, Eye, PlayCircle, X } from "lucide-react";
 import { 
   Popover, 
   PopoverContent, 
@@ -29,11 +29,11 @@ interface WatchlistButtonProps {
   onUpdate?: () => void;
 }
 
-const statusLabels: Record<WatchlistStatus, { label: string; icon: string }> = {
-  to_watch: { label: "À voir", icon: "👀" },
-  in_progress: { label: "En cours", icon: "▶️" },
-  completed: { label: "Terminé", icon: "✅" },
-  dropped: { label: "Abandonné", icon: "⏳" },
+const statusLabels: Record<WatchlistStatus, { label: string; icon: React.ReactNode }> = {
+  to_watch: { label: "À voir", icon: <Eye className="w-4 h-4 mr-2" /> },
+  in_progress: { label: "En cours", icon: <PlayCircle className="w-4 h-4 mr-2" /> },
+  completed: { label: "Terminé", icon: <Check className="w-4 h-4 mr-2" /> },
+  dropped: { label: "Abandonné", icon: <X className="w-4 h-4 mr-2" /> },
 };
 
 export function WatchlistButton({ 
@@ -101,10 +101,13 @@ export function WatchlistButton({
         {initialData ? (
           <>
             <Check className="h-4 w-4 text-green-500" />
-            <span>{currentLabel?.icon} {currentLabel?.label}</span>
+            <div className="flex items-center">
+              {currentLabel?.icon}
+              <span>{currentLabel?.label}</span>
+            </div>
             {starDisplay && (
               <span className="ml-1 text-yellow-500 flex items-center gap-0.5">
-                <Star className="h-3 w-3 fill-current" />
+                <Star className="h-3 w-3 fill-yellow-500" />
                 {starDisplay}/5
               </span>
             )}
@@ -117,7 +120,7 @@ export function WatchlistButton({
         )}
       </PopoverTrigger>
 
-      <PopoverContent className="w-80 p-4 bg-zinc-950 border-zinc-800 text-zinc-100 shadow-2xl rounded-2xl">
+      <PopoverContent className="w-80 p-4 bg-popover border-border text-popover-foreground shadow-md rounded-2xl">
         <div className="space-y-6">
           <div className="space-y-2">
             <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Statut</label>
@@ -130,9 +133,12 @@ export function WatchlistButton({
                   <SelectItem 
                     key={key} 
                     value={key}
-                    className="focus:bg-zinc-800 focus:text-white transition-colors py-2.5"
+                    className="focus:bg-accent focus:text-accent-foreground transition-colors py-2.5"
                   >
-                    <span className="mr-2">{icon}</span> {label}
+                    <div className="flex items-center">
+                      {icon}
+                      <span>{label}</span>
+                    </div>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -153,10 +159,10 @@ export function WatchlistButton({
                 >
                   <Star 
                     className={cn(
-                      "h-7 w-7 transition-colors",
+                      "h-7 w-7 transition-all duration-200",
                       (hoverRating || rating) >= star * 20 
-                        ? "fill-yellow-500 text-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.3)]" 
-                        : "text-zinc-700"
+                        ? "fill-yellow-500 text-yellow-500" 
+                        : "fill-transparent text-muted-foreground/30"
                     )} 
                   />
                 </button>
@@ -176,7 +182,7 @@ export function WatchlistButton({
             <Button 
               onClick={handleSave} 
               disabled={isPending}
-              className="w-full h-11 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-violet-950/20 transition-all active:scale-95"
+              className="w-full h-11 font-bold rounded-xl active:scale-95 transition-all"
             >
               {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Enregistrer"}
             </Button>
