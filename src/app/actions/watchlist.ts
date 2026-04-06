@@ -2,11 +2,21 @@
 
 import { createClient } from "@/lib/supabase/server";
 
+export type WatchlistStatus = 'to_watch' | 'in_progress' | 'completed' | 'dropped';
+
 /**
- * Toggles a media item's presence in the user's watchlist.
- * If it exists, it is removed. If not, it is added with 'to_watch' status.
+ * Inserts or updates a media item in the user's watchlist.
+ * @param tmdbId The TMDB ID of the media.
+ * @param mediaType The type of media ('movie' or 'tv').
+ * @param status The current status (e.g., 'to_watch', 'in_progress').
+ * @param rating Optional rating between 0 and 100.
  */
-export async function toggleWatchlistAction(tmdbId: number, mediaType: 'movie' | 'tv') {
+export async function upsertWatchlistItemAction(
+  tmdbId: number, 
+  mediaType: 'movie' | 'tv', 
+  status: WatchlistStatus,
+  rating?: number
+) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -14,65 +24,65 @@ export async function toggleWatchlistAction(tmdbId: number, mediaType: 'movie' |
     throw new Error("Vous devez être connecté pour gérer votre liste.");
   }
 
-  // Check if the media is already in the list
-  const { data: existing, error: fetchError } = await supabase
+  const { error } = await supabase
     .from('user_media')
-    .select('id')
-    .eq('user_id', user.id)
-    .eq('tmdb_id', tmdbId)
-    .eq('media_type', mediaType)
-    .maybeSingle();
+    .upsert({
+      user_id: user.id,
+      tmdb_id: tmdbId,
+      media_type: mediaType,
+      status,
+      rating: rating ?? null,
+      updated_at: new Date().toISOString()
+    }, {
+      onConflict: 'user_id, tmdb_id, media_type'
+    });
 
-  if (fetchError) {
-    console.error("Error fetching watchlist status:", fetchError);
-    throw new Error("Erreur lors de la vérification de la liste.");
+  if (error) {
+    console.error("Error upserting watchlist item:", error);
+    throw new Error("Erreur lors de la mise à jour de votre liste.");
   }
 
-  if (existing) {
-    // If it exists, remove it
-    const { error: deleteError } = await supabase
-      .from('user_media')
-      .delete()
-      .eq('id', existing.id);
-
-    if (deleteError) {
-      console.error("Error removing from watchlist:", deleteError);
-      throw new Error("Erreur lors de la suppression de la liste.");
-    }
-    return { status: 'removed' };
-  } else {
-    // If it doesn't exist, insert it
-    const { error: insertError } = await supabase
-      .from('user_media')
-      .insert({
-        user_id: user.id,
-        tmdb_id: tmdbId,
-        media_type: mediaType,
-        status: 'to_watch'
-      });
-
-    if (insertError) {
-      console.error("Error adding to watchlist:", insertError);
-      throw new Error("Erreur lors de l'ajout à la liste.");
-    }
-    return { status: 'added' };
-  }
+  return { success: true };
 }
 
 /**
- * Checks if a specific media item is in the user's watchlist.
+ * Removes a media item from the user's watchlist.
+ */
+export async function removeWatchlistItemAction(tmdbId: number, mediaType: 'movie' | 'tv') {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Vous devez être connecté pour gérer votre liste.");
+  }
+
+  const { error } = await supabase
+    .from('user_media')
+    .delete()
+    .eq('user_id', user.id)
+    .eq('tmdb_id', tmdbId)
+    .eq('media_type', mediaType);
+
+  if (error) {
+    console.error("Error removing from watchlist:", error);
+    throw new Error("Erreur lors de la suppression de l'élément.");
+  }
+
+  return { success: true };
+}
+
+/**
+ * Checks if a specific media item is in the user's watchlist and returns its data.
  */
 export async function checkWatchlistStatusAction(tmdbId: number, mediaType: 'movie' | 'tv') {
   const supabase = await createClient();
-  
-  // We use getSession first to be faster/lighter if not logged in
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) return false;
+  if (!user) return null;
 
   const { data, error } = await supabase
     .from('user_media')
-    .select('id')
+    .select('status, rating')
     .eq('user_id', user.id)
     .eq('tmdb_id', tmdbId)
     .eq('media_type', mediaType)
@@ -80,8 +90,9 @@ export async function checkWatchlistStatusAction(tmdbId: number, mediaType: 'mov
 
   if (error) {
     console.error("Error checking watchlist status:", error);
-    return false;
+    return null;
   }
 
-  return !!data;
+  return data;
 }
+

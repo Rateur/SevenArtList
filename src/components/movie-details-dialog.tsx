@@ -2,12 +2,11 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Star, Clock, Calendar, Users, Check, Plus, Loader2 } from "lucide-react";
+import { Star, Clock, Calendar, Users } from "lucide-react";
 import { 
   Dialog, 
   DialogContent 
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { 
@@ -16,9 +15,9 @@ import {
   getProviderLogoUrl
 } from "@/lib/services/tmdb";
 import { getMovieDetailsAction, ExtendedMovieDetails } from "@/app/actions/movie";
-import { toggleWatchlistAction, checkWatchlistStatusAction } from "@/app/actions/watchlist";
+import { checkWatchlistStatusAction, WatchlistStatus } from "@/app/actions/watchlist";
+import { WatchlistButton } from "@/components/watchlist-button";
 import { PROVIDER_NAME_MAPPING } from "@/lib/constants/providers";
-import { toast } from "sonner";
 
 interface MovieDetailsDialogProps {
   movieId: number | null;
@@ -33,8 +32,18 @@ export function MovieDetailsDialog({
 }: MovieDetailsDialogProps) {
   const [movie, setMovie] = React.useState<ExtendedMovieDetails | null>(null);
   const [loading, setLoading] = React.useState(false);
-  const [isInWatchlist, setIsInWatchlist] = React.useState(false);
-  const [isPending, startTransition] = React.useTransition();
+  const [watchlistData, setWatchlistData] = React.useState<{ status: WatchlistStatus, rating: number | null } | null>(null);
+
+  // Fetch movie details and watchlist status
+  const fetchWatchlistStatus = React.useCallback(async () => {
+    if (!movieId) return;
+    try {
+      const status = await checkWatchlistStatusAction(movieId, 'movie');
+      setWatchlistData(status);
+    } catch (error) {
+      console.error("Failed to fetch watchlist status:", error);
+    }
+  }, [movieId]);
 
   React.useEffect(() => {
     if (open && movieId) {
@@ -46,7 +55,7 @@ export function MovieDetailsDialog({
             checkWatchlistStatusAction(movieId, 'movie')
           ]);
           setMovie(details);
-          setIsInWatchlist(status);
+          setWatchlistData(status);
         } catch (error) {
           console.error("Failed to fetch movie details:", error);
         } finally {
@@ -57,29 +66,10 @@ export function MovieDetailsDialog({
     } else if (!open) {
       // Clear movie data when dialog closes to avoid flash of old data
       setMovie(null);
-      setIsInWatchlist(false);
+      setWatchlistData(null);
     }
   }, [open, movieId]);
 
-  const handleToggleWatchlist = async () => {
-    if (!movieId) return;
-    
-    startTransition(async () => {
-      try {
-        const result = await toggleWatchlistAction(movieId, 'movie');
-        setIsInWatchlist(result.status === 'added');
-        
-        if (result.status === 'added') {
-          toast.success(`${movie?.title} ajouté à votre liste !`);
-        } else {
-          toast.info(`${movie?.title} retiré de votre liste.`);
-        }
-      } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : "Une erreur est survenue.";
-        toast.error(errorMessage);
-      }
-    });
-  };
 
   const formatRuntime = (minutes: number | null) => {
     if (!minutes) return "N/A";
@@ -211,25 +201,14 @@ export function MovieDetailsDialog({
                     </div>
 
                     <div className="mt-6">
-                      <Button 
-                        variant={isInWatchlist ? "secondary" : "outline"}
-                        className={`w-full sm:w-fit h-11 px-6 gap-2 text-sm font-medium transition-all ${
-                          isInWatchlist 
-                            ? "bg-zinc-800 text-zinc-100 border-zinc-700 hover:bg-zinc-700" 
-                            : "border-zinc-800 hover:bg-zinc-800 text-zinc-300"
-                        }`}
-                        onClick={handleToggleWatchlist}
-                        disabled={isPending}
-                      >
-                        {isPending ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : isInWatchlist ? (
-                          <Check className="h-4 w-4" />
-                        ) : (
-                          <Plus className="h-4 w-4" />
-                        )}
-                        {isInWatchlist ? "Dans ma liste" : "Ajouter à ma liste"}
-                      </Button>
+                      {movieId && (
+                        <WatchlistButton 
+                          tmdbId={movieId} 
+                          mediaType="movie" 
+                          initialData={watchlistData}
+                          onUpdate={fetchWatchlistStatus}
+                        />
+                      )}
                     </div>
                   </>
                 )}
