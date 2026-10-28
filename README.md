@@ -2,7 +2,9 @@
 
 # SevenArtList
 
-Centralize your watchlist. Sync with your partner. Gamify your cinema experience.
+Search movies, see where to stream them, track what you watch.
+
+*Personal project, work in progress.*
 
 [![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB)](https://reactjs.org/)
@@ -23,19 +25,39 @@ Centralize your watchlist. Sync with your partner. Gamify your cinema experience
 
 ## Overview
 
-**SevenArtList** is an open-source web application designed to help you track your media consumption (movies, series, and animes) in one place. 
+**SevenArtList** is an open-source web application to find a movie, see where to stream it in France, and keep track of what you watch.
 
-The name comes from the "7th Art" (Cinema) combined with the concept of a "Watchlist". Whether you're a solo viewer or part of a couple, SevenArtList offers real-time synchronization to manage your watchlists together, complete marathons, and visualize your progress through advanced statistics.
+The name comes from the "7th Art" (Cinema) combined with the concept of a "Watchlist".
+
+## Status
+
+Personal project, **work in progress**. No hosted demo is linked.
+
+- **Works today:** account sign-up and login, movie search, movie details, streaming links, personal watchlist (status and rating). Movies only, one user per list.
+- **Not built yet:** series and anime, shared watchlists, statistics. See [Planned](#planned).
+- **Tests:** 8 Vitest tests in 3 files (home page, TMDB service, auth service). CI runs lint, tests and build on Node 20 for each push and pull request to `main`.
+- **Language:** the interface is in French.
 
 ## Features
 
 | Feature | Description | Status |
 | :--- | :--- | :--- |
-| **Data Infrastructure** | Supabase Setup & PostgreSQL Schema | `[Done]` |
-| **Auth System** | Login, Sessions & Middleware | `[Done]` |
-| **Media Search** | TMDB API (Functional), Debounced Real-time Search, Gold Standard Filtering | `[Done]` |
-| **Movie Details (Modal)** | Immersive modal with TMDB data and casting | `[Done]` |
-| **Watchlist** | Personal & Shared Tracking | `[Planned]` |
+| **Data Infrastructure** | Supabase project and PostgreSQL schema (`docs/database_schema.sql`) | `[Done]` |
+| **Auth System** | Email and password sign-up and login with Supabase. Session refresh in `src/proxy.ts`. `/` redirects to `/login` when signed out | `[Done]` |
+| **Movie Search** | TMDB search in French, 500 ms debounce, 2-character minimum. Results need a poster, exclude documentaries and TV movies, and need popularity of 5 or more, or 10 votes or more | `[Done]` |
+| **Movie Details (Modal)** | Synopsis, runtime, TMDB rating, genres, first 5 cast members | `[Done]` |
+| **Where to Watch** | Streaming and rent/buy links for France from Watchmode, with TMDB provider logos | `[Done]` |
+| **Personal Watchlist** | From the movie modal: set a status (to watch, in progress, completed, dropped), a 1 to 5 star rating, or remove the movie. Stored in the `user_media` table | `[Done]` |
+
+## Planned
+
+- **"My List" page.** The nav button is disabled.
+- **Series and anime.** Search and the modal only handle movies. The watchlist server actions and `user_media` already accept a `tv` type.
+- **Shared watchlists.** The schema has `squads`, `squad_members` and row-level security policies. No app code uses them yet.
+- **Real-time sync** between partners.
+- **Marathons, statistics, gamification.** Not started.
+- **Profile page and sign-out button.** `authService.signOut` exists, nothing calls it. The nav "Profil" button is disabled.
+- **Architecture doc.** `docs/architecture.md` is an empty stub.
 
 ## Tech Stack
 
@@ -74,27 +96,40 @@ The name comes from the "7th Art" (Cinema) combined with the concept of a "Watch
   </tr>
 </table>
 
+Versions from `package.json`:
+
+- **Next.js** 16.2.2 (App Router, Server Actions) and **React** 19.2.4
+- **TypeScript** ^5
+- **Tailwind CSS** ^4, with shadcn/ui components built on Base UI (`@base-ui/react` ^1.3.0)
+- **Supabase**: `@supabase/supabase-js` ^2.101.1 and `@supabase/ssr` ^0.10.0 (auth and PostgreSQL)
+- **TMDB** API for movie data, **Watchmode** API for streaming links
+- **Forms and toasts**: react-hook-form ^7.72.1, zod ^4.3.6, sonner ^2.0.7
+- **Tests and lint**: Vitest ^4.1.2, Testing Library, ESLint ^9
+
 ## Project Structure
 
 ```text
 SevenArtList/
-├── docs/                   # SQL Schemas & Documentation
+├── .github/workflows/      # CI: lint, test, build
+├── docs/                   # SQL schema, architecture stub
 ├── public/                 # Static assets (images, logos)
 ├── src/
 │   ├── app/                # Next.js App Router
-│   │   ├── actions/        # Server Actions (movie.ts, search.ts)
-│   │   ├── login/          # Auth pages
-│   │   └── ...
+│   │   ├── actions/        # Server Actions (movie.ts, search.ts, watchlist.ts)
+│   │   ├── login/          # Login and sign-up page
+│   │   └── page.tsx        # Home: movie search
 │   ├── components/         # React Components
-│   │   ├── ui/             # Shadcn UI (dialog, badge, skeleton, etc.)
+│   │   ├── ui/             # shadcn/ui (dialog, badge, skeleton, etc.)
 │   │   ├── movie-card.tsx
 │   │   ├── movie-details-dialog.tsx
-│   │   └── ...
+│   │   ├── search-movies.tsx
+│   │   └── watchlist-button.tsx
 │   ├── lib/                # Shared utilities
-│   │   ├── services/       # TMDB API Service logic
-│   │   └── supabase/       # Config client/middleware config
-│   └── services/           # Backend / Auth logic
-├── tasks/                  # Tasks, Lessons & Context
+│   │   ├── services/       # TMDB and Watchmode clients
+│   │   └── supabase/       # Browser, server and middleware clients
+│   ├── services/           # Auth service
+│   └── proxy.ts            # Session refresh and redirects
+├── .env.example            # Environment variable names
 ├── next.config.ts          # Next.js configuration
 ├── package.json            # Dependencies & Scripts
 └── ...
@@ -104,44 +139,60 @@ SevenArtList/
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 20 or later (the version CI uses)
 - npm
+- A [Supabase](https://supabase.com/) project, a [TMDB](https://www.themoviedb.org/) account and a [Watchmode](https://api.watchmode.com/) account
 
 ### Installation
 
 1. Clone the repository:
    ```bash
    git clone https://github.com/Rateur/SevenArtList.git
+   cd SevenArtList
    ```
 2. Install dependencies:
    ```bash
    npm install
    ```
-3. Set up your environment variables (see `.env.example`).
-4. Run the development server:
+3. Create `.env.local` from `.env.example` and fill in the four variables (see below):
+   ```bash
+   cp .env.example .env.local
+   ```
+4. Create the database tables (see [Database Setup](#database-setup)).
+5. Run the development server:
    ```bash
    npm run dev
    ```
+6. Open [http://localhost:3000](http://localhost:3000). You are sent to `/login` until you are signed in. Create an account there. Supabase may ask you to confirm your email.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment Variables
+
+All four are needed. The names are in `.env.example`, the values are yours.
+
+| Variable | Used for | Where to get it |
+| :--- | :--- | :--- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Auth and database | Supabase project settings, API section |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Auth and database | Same page |
+| `TMDB_TOKEN` | Search and movie details | TMDB account, API section, **API Read Access Token (v4)** |
+| `WATCHMODE_API_KEY` | Streaming links | Watchmode dashboard |
+
+Without `TMDB_TOKEN`, search returns nothing. Without `WATCHMODE_API_KEY`, the movie modal does not load. Never commit `.env.local`.
 
 ### Database Setup
 
 1. **Create Project**: Create a new project on [Supabase](https://supabase.com/).
-2. **SQL Schema**: Copy the content of [docs/database_schema.sql](./docs/database_schema.sql) and execute it in the **SQL Editor** of your Supabase project.
-3. **Environment Variables**: Create a `.env.local` file from [.env.example](./.env.example) and fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+2. **SQL Schema**: Copy the content of [docs/database_schema.sql](./docs/database_schema.sql) and run it in the **SQL Editor** of your Supabase project.
+3. **Note**: the file holds the first schema (`profiles`, `squads`, `watchlists`...) and `user_media`. The app reads and writes `user_media` only.
 
-### TMDB Setup
+### Other Scripts
 
-1. **Create Account**: Create an account on [TheMovieDB.org](https://www.themoviedb.org/).
-2. **API Settings**: Go to the **API** section in your account settings.
-3. **Get Token**: Retrieve the **API Read Access Token (v4)**.
-4. **Environment Variables**: Add it to your `.env.local` file under the variable `TMDB_TOKEN`.
-5. **Documentation**: TMDB is used for metadata (sysnopsis, posters, casting).
+```bash
+npm run lint    # ESLint
+npm test        # Vitest, single run
+npm run build   # Production build
+npm start       # Serve the production build
+```
 
-### Watchmode Setup (Streaming Links)
+## Author
 
-1. **Create Account**: Create a free account on [api.watchmode.com](https://api.watchmode.com/).
-2. **Get API Key**: Retrieve your API key from the dashboard.
-3. **Environment Variables**: Add it to your `.env.local` file under the variable `WATCHMODE_API_KEY`.
-4. **Deep Links**: Watchmode is used to obtain direct links to streaming services (Netflix, Prime, etc.), bypassing JustWatch redirects for a better UX.
+Valentin Périès ([@Rateur](https://github.com/Rateur)). Released under the [MIT License](./LICENSE). See [CONTRIBUTING.md](./CONTRIBUTING.md) to contribute.
